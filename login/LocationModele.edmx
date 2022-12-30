@@ -1,0 +1,485 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="locationSiteModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="IdClient" />
+          </Key>
+          <Property Name="IdClient" Type="int" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="50" />
+          <Property Name="telephone" Type="int" />
+          <Property Name="adresse" Type="nvarchar" MaxLength="50" />
+          <Property Name="age" Type="int" />
+          <Property Name="statutSociale" Type="nvarchar" MaxLength="50" />
+          <Property Name="image" Type="nvarchar" MaxLength="50" />
+          <Property Name="prenom " Type="nvarchar" MaxLength="50" />
+          <Property Name="nom" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Client_Prob">
+          <Key>
+            <PropertyRef Name="IdProbleme" />
+          </Key>
+          <Property Name="IdProbleme" Type="int" Nullable="false" />
+          <Property Name="IdClient" Type="int" />
+          <Property Name="labelProb" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="LocationTab">
+          <Key>
+            <PropertyRef Name="IdCommande" />
+          </Key>
+          <Property Name="IdCommande" Type="int" Nullable="false" />
+          <Property Name="IdP" Type="int" />
+          <Property Name="IdClient" Type="int" />
+          <Property Name="IdVoiture" Type="int" />
+        </EntityType>
+        <EntityType Name="Proprietaire">
+          <Key>
+            <PropertyRef Name="idP" />
+          </Key>
+          <Property Name="idP" Type="int" Nullable="false" />
+          <Property Name="nomComplet" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="NomSociete" Type="nvarchar" MaxLength="50" />
+          <Property Name="tel" Type="int" Nullable="false" />
+          <Property Name="genre" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Utilisateur">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="email" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="motdepasse" Type="nvarchar" MaxLength="50" />
+          <Property Name="role" Type="nvarchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Voiture">
+          <Key>
+            <PropertyRef Name="IdVoiture" />
+          </Key>
+          <Property Name="IdVoiture" Type="int" Nullable="false" />
+          <Property Name="IdP" Type="int" />
+          <Property Name="couleur" Type="nvarchar" MaxLength="50" />
+          <Property Name="marque" Type="nvarchar" MaxLength="50" />
+          <Property Name="Km" Type="int" />
+          <Property Name="photo" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <Association Name="FK_Client_Prob_ToTable">
+          <End Role="Client" Type="Self.Client" Multiplicity="0..1" />
+          <End Role="Client_Prob" Type="Self.Client_Prob" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="IdClient" />
+            </Principal>
+            <Dependent Role="Client_Prob">
+              <PropertyRef Name="IdClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LocationTab_ToTable">
+          <End Role="Proprietaire" Type="Self.Proprietaire" Multiplicity="0..1" />
+          <End Role="LocationTab" Type="Self.LocationTab" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Proprietaire">
+              <PropertyRef Name="idP" />
+            </Principal>
+            <Dependent Role="LocationTab">
+              <PropertyRef Name="IdP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LocationTab_ToTable_1">
+          <End Role="Voiture" Type="Self.Voiture" Multiplicity="0..1" />
+          <End Role="LocationTab" Type="Self.LocationTab" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Voiture">
+              <PropertyRef Name="IdVoiture" />
+            </Principal>
+            <Dependent Role="LocationTab">
+              <PropertyRef Name="IdVoiture" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LocationTab_ToTable_2">
+          <End Role="Client" Type="Self.Client" Multiplicity="0..1" />
+          <End Role="LocationTab" Type="Self.LocationTab" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="IdClient" />
+            </Principal>
+            <Dependent Role="LocationTab">
+              <PropertyRef Name="IdClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Proprietaire_ToTable">
+          <End Role="Utilisateur" Type="Self.Utilisateur" Multiplicity="1" />
+          <End Role="Proprietaire" Type="Self.Proprietaire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Utilisateur">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="Proprietaire">
+              <PropertyRef Name="email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_ToTable">
+          <End Role="Utilisateur" Type="Self.Utilisateur" Multiplicity="0..1" />
+          <End Role="Client" Type="Self.Client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Utilisateur">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="Client">
+              <PropertyRef Name="email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Voiture_ToTable">
+          <End Role="Proprietaire" Type="Self.Proprietaire" Multiplicity="0..1" />
+          <End Role="Voiture" Type="Self.Voiture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Proprietaire">
+              <PropertyRef Name="idP" />
+            </Principal>
+            <Dependent Role="Voiture">
+              <PropertyRef Name="IdP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="locationSiteModelStoreContainer">
+          <EntitySet Name="Client" EntityType="Self.Client" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Client_Prob" EntityType="Self.Client_Prob" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LocationTab" EntityType="Self.LocationTab" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Proprietaire" EntityType="Self.Proprietaire" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Utilisateur" EntityType="Self.Utilisateur" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Voiture" EntityType="Self.Voiture" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Client_Prob_ToTable" Association="Self.FK_Client_Prob_ToTable">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="Client_Prob" EntitySet="Client_Prob" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LocationTab_ToTable" Association="Self.FK_LocationTab_ToTable">
+            <End Role="Proprietaire" EntitySet="Proprietaire" />
+            <End Role="LocationTab" EntitySet="LocationTab" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LocationTab_ToTable_1" Association="Self.FK_LocationTab_ToTable_1">
+            <End Role="Voiture" EntitySet="Voiture" />
+            <End Role="LocationTab" EntitySet="LocationTab" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LocationTab_ToTable_2" Association="Self.FK_LocationTab_ToTable_2">
+            <End Role="Client" EntitySet="Client" />
+            <End Role="LocationTab" EntitySet="LocationTab" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Proprietaire_ToTable" Association="Self.FK_Proprietaire_ToTable">
+            <End Role="Utilisateur" EntitySet="Utilisateur" />
+            <End Role="Proprietaire" EntitySet="Proprietaire" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_ToTable" Association="Self.FK_Table_ToTable">
+            <End Role="Utilisateur" EntitySet="Utilisateur" />
+            <End Role="Client" EntitySet="Client" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Voiture_ToTable" Association="Self.FK_Voiture_ToTable">
+            <End Role="Proprietaire" EntitySet="Proprietaire" />
+            <End Role="Voiture" EntitySet="Voiture" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="locationSiteModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Client">
+          <Key>
+            <PropertyRef Name="IdClient" />
+          </Key>
+          <Property Name="IdClient" Type="Int32" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="telephone" Type="Int32" />
+          <Property Name="adresse" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="age" Type="Int32" />
+          <Property Name="statutSociale" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="image" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="prenom_" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="nom" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Client_Prob" Relationship="Self.FK_Client_Prob_ToTable" FromRole="Client" ToRole="Client_Prob" />
+          <NavigationProperty Name="LocationTabs" Relationship="Self.FK_LocationTab_ToTable_2" FromRole="Client" ToRole="LocationTab" />
+          <NavigationProperty Name="Utilisateur" Relationship="Self.FK_Table_ToTable" FromRole="Client" ToRole="Utilisateur" />
+        </EntityType>
+        <EntityType Name="Client_Prob">
+          <Key>
+            <PropertyRef Name="IdProbleme" />
+          </Key>
+          <Property Name="IdProbleme" Type="Int32" Nullable="false" />
+          <Property Name="IdClient" Type="Int32" />
+          <Property Name="labelProb" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_Client_Prob_ToTable" FromRole="Client_Prob" ToRole="Client" />
+        </EntityType>
+        <EntityType Name="LocationTab">
+          <Key>
+            <PropertyRef Name="IdCommande" />
+          </Key>
+          <Property Name="IdCommande" Type="Int32" Nullable="false" />
+          <Property Name="IdP" Type="Int32" />
+          <Property Name="IdClient" Type="Int32" />
+          <Property Name="IdVoiture" Type="Int32" />
+          <NavigationProperty Name="Client" Relationship="Self.FK_LocationTab_ToTable_2" FromRole="LocationTab" ToRole="Client" />
+          <NavigationProperty Name="Proprietaire" Relationship="Self.FK_LocationTab_ToTable" FromRole="LocationTab" ToRole="Proprietaire" />
+          <NavigationProperty Name="Voiture" Relationship="Self.FK_LocationTab_ToTable_1" FromRole="LocationTab" ToRole="Voiture" />
+        </EntityType>
+        <EntityType Name="Proprietaire">
+          <Key>
+            <PropertyRef Name="idP" />
+          </Key>
+          <Property Name="idP" Type="Int32" Nullable="false" />
+          <Property Name="nomComplet" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NomSociete" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="tel" Type="Int32" Nullable="false" />
+          <Property Name="genre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="LocationTabs" Relationship="Self.FK_LocationTab_ToTable" FromRole="Proprietaire" ToRole="LocationTab" />
+          <NavigationProperty Name="Utilisateur" Relationship="Self.FK_Proprietaire_ToTable" FromRole="Proprietaire" ToRole="Utilisateur" />
+          <NavigationProperty Name="Voitures" Relationship="Self.FK_Voiture_ToTable" FromRole="Proprietaire" ToRole="Voiture" />
+        </EntityType>
+        <EntityType Name="Utilisateur">
+          <Key>
+            <PropertyRef Name="email" />
+          </Key>
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="motdepasse" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="role" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Clients" Relationship="Self.FK_Table_ToTable" FromRole="Utilisateur" ToRole="Client" />
+          <NavigationProperty Name="Proprietaires" Relationship="Self.FK_Proprietaire_ToTable" FromRole="Utilisateur" ToRole="Proprietaire" />
+        </EntityType>
+        <EntityType Name="Voiture">
+          <Key>
+            <PropertyRef Name="IdVoiture" />
+          </Key>
+          <Property Name="IdVoiture" Type="Int32" Nullable="false" />
+          <Property Name="IdP" Type="Int32" />
+          <Property Name="couleur" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="marque" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Km" Type="Int32" />
+          <Property Name="photo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="LocationTabs" Relationship="Self.FK_LocationTab_ToTable_1" FromRole="Voiture" ToRole="LocationTab" />
+          <NavigationProperty Name="Proprietaire" Relationship="Self.FK_Voiture_ToTable" FromRole="Voiture" ToRole="Proprietaire" />
+        </EntityType>
+        <Association Name="FK_Client_Prob_ToTable">
+          <End Role="Client" Type="Self.Client" Multiplicity="0..1" />
+          <End Role="Client_Prob" Type="Self.Client_Prob" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="IdClient" />
+            </Principal>
+            <Dependent Role="Client_Prob">
+              <PropertyRef Name="IdClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LocationTab_ToTable_2">
+          <End Role="Client" Type="Self.Client" Multiplicity="0..1" />
+          <End Role="LocationTab" Type="Self.LocationTab" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Client">
+              <PropertyRef Name="IdClient" />
+            </Principal>
+            <Dependent Role="LocationTab">
+              <PropertyRef Name="IdClient" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Table_ToTable">
+          <End Role="Utilisateur" Type="Self.Utilisateur" Multiplicity="0..1" />
+          <End Role="Client" Type="Self.Client" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Utilisateur">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="Client">
+              <PropertyRef Name="email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LocationTab_ToTable">
+          <End Role="Proprietaire" Type="Self.Proprietaire" Multiplicity="0..1" />
+          <End Role="LocationTab" Type="Self.LocationTab" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Proprietaire">
+              <PropertyRef Name="idP" />
+            </Principal>
+            <Dependent Role="LocationTab">
+              <PropertyRef Name="IdP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LocationTab_ToTable_1">
+          <End Role="Voiture" Type="Self.Voiture" Multiplicity="0..1" />
+          <End Role="LocationTab" Type="Self.LocationTab" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Voiture">
+              <PropertyRef Name="IdVoiture" />
+            </Principal>
+            <Dependent Role="LocationTab">
+              <PropertyRef Name="IdVoiture" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Proprietaire_ToTable">
+          <End Role="Utilisateur" Type="Self.Utilisateur" Multiplicity="1" />
+          <End Role="Proprietaire" Type="Self.Proprietaire" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Utilisateur">
+              <PropertyRef Name="email" />
+            </Principal>
+            <Dependent Role="Proprietaire">
+              <PropertyRef Name="email" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Voiture_ToTable">
+          <End Role="Proprietaire" Type="Self.Proprietaire" Multiplicity="0..1" />
+          <End Role="Voiture" Type="Self.Voiture" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Proprietaire">
+              <PropertyRef Name="idP" />
+            </Principal>
+            <Dependent Role="Voiture">
+              <PropertyRef Name="IdP" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="locationSiteEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Clients" EntityType="Self.Client" />
+          <EntitySet Name="Client_Prob" EntityType="Self.Client_Prob" />
+          <EntitySet Name="LocationTabs" EntityType="Self.LocationTab" />
+          <EntitySet Name="Proprietaires" EntityType="Self.Proprietaire" />
+          <EntitySet Name="Utilisateurs" EntityType="Self.Utilisateur" />
+          <EntitySet Name="Voitures" EntityType="Self.Voiture" />
+          <AssociationSet Name="FK_Client_Prob_ToTable" Association="Self.FK_Client_Prob_ToTable">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="Client_Prob" EntitySet="Client_Prob" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LocationTab_ToTable_2" Association="Self.FK_LocationTab_ToTable_2">
+            <End Role="Client" EntitySet="Clients" />
+            <End Role="LocationTab" EntitySet="LocationTabs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Table_ToTable" Association="Self.FK_Table_ToTable">
+            <End Role="Utilisateur" EntitySet="Utilisateurs" />
+            <End Role="Client" EntitySet="Clients" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LocationTab_ToTable" Association="Self.FK_LocationTab_ToTable">
+            <End Role="Proprietaire" EntitySet="Proprietaires" />
+            <End Role="LocationTab" EntitySet="LocationTabs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LocationTab_ToTable_1" Association="Self.FK_LocationTab_ToTable_1">
+            <End Role="Voiture" EntitySet="Voitures" />
+            <End Role="LocationTab" EntitySet="LocationTabs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Proprietaire_ToTable" Association="Self.FK_Proprietaire_ToTable">
+            <End Role="Utilisateur" EntitySet="Utilisateurs" />
+            <End Role="Proprietaire" EntitySet="Proprietaires" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Voiture_ToTable" Association="Self.FK_Voiture_ToTable">
+            <End Role="Proprietaire" EntitySet="Proprietaires" />
+            <End Role="Voiture" EntitySet="Voitures" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="locationSiteModelStoreContainer" CdmEntityContainer="locationSiteEntities">
+          <EntitySetMapping Name="Clients">
+            <EntityTypeMapping TypeName="locationSiteModel.Client">
+              <MappingFragment StoreEntitySet="Client">
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="telephone" ColumnName="telephone" />
+                <ScalarProperty Name="adresse" ColumnName="adresse" />
+                <ScalarProperty Name="age" ColumnName="age" />
+                <ScalarProperty Name="statutSociale" ColumnName="statutSociale" />
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="prenom_" ColumnName="prenom " />
+                <ScalarProperty Name="nom" ColumnName="nom" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Client_Prob">
+            <EntityTypeMapping TypeName="locationSiteModel.Client_Prob">
+              <MappingFragment StoreEntitySet="Client_Prob">
+                <ScalarProperty Name="IdProbleme" ColumnName="IdProbleme" />
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
+                <ScalarProperty Name="labelProb" ColumnName="labelProb" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LocationTabs">
+            <EntityTypeMapping TypeName="locationSiteModel.LocationTab">
+              <MappingFragment StoreEntitySet="LocationTab">
+                <ScalarProperty Name="IdCommande" ColumnName="IdCommande" />
+                <ScalarProperty Name="IdP" ColumnName="IdP" />
+                <ScalarProperty Name="IdClient" ColumnName="IdClient" />
+                <ScalarProperty Name="IdVoiture" ColumnName="IdVoiture" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Proprietaires">
+            <EntityTypeMapping TypeName="locationSiteModel.Proprietaire">
+              <MappingFragment StoreEntitySet="Proprietaire">
+                <ScalarProperty Name="idP" ColumnName="idP" />
+                <ScalarProperty Name="nomComplet" ColumnName="nomComplet" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="NomSociete" ColumnName="NomSociete" />
+                <ScalarProperty Name="tel" ColumnName="tel" />
+                <ScalarProperty Name="genre" ColumnName="genre" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Utilisateurs">
+            <EntityTypeMapping TypeName="locationSiteModel.Utilisateur">
+              <MappingFragment StoreEntitySet="Utilisateur">
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="motdepasse" ColumnName="motdepasse" />
+                <ScalarProperty Name="role" ColumnName="role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Voitures">
+            <EntityTypeMapping TypeName="locationSiteModel.Voiture">
+              <MappingFragment StoreEntitySet="Voiture">
+                <ScalarProperty Name="IdVoiture" ColumnName="IdVoiture" />
+                <ScalarProperty Name="IdP" ColumnName="IdP" />
+                <ScalarProperty Name="couleur" ColumnName="couleur" />
+                <ScalarProperty Name="marque" ColumnName="marque" />
+                <ScalarProperty Name="Km" ColumnName="Km" />
+                <ScalarProperty Name="photo" ColumnName="photo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Aucun" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
